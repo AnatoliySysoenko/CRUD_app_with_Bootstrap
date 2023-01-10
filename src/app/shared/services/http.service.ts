@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CustomerInterface } from '../types/customer.interface';
-import { map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { ResponseCustomerInterface } from '../types/responseCustomer.interface';
 import { RequestCustomerInterface } from '../types/requestCustomer.interface';
 
@@ -39,17 +39,22 @@ export class HttpService {
 
   updateData(customer: CustomerInterface, i: number): void {
     const {key, ...data} = customer;
-    this.http.put(`${url}/customers/${key}.json`, data, httpOptions).subscribe({
-      next: (res) => this.customers[i] = customer
+    this.http.put<CustomerInterface>(`${url}/customers/${key}.json`, data, httpOptions).subscribe({
+      next: () => this.customers[i] = customer,
+      error: catchError(this.errorHandler<CustomerInterface>('PUT'))
     });
   }
 
-  deleteData(): void {}
+  deleteData(customer: CustomerInterface): void {
+    this.http.delete(`${url}/customers/${customer.key}.json`, httpOptions).subscribe({
+      next: () => this.customers.splice(this.customers.indexOf(customer), 1),
+      error: catchError(this.errorHandler<CustomerInterface>('DELETE'))
+    });
+  }
 
-  private errorHandler<T>(operation: string, res: any) {
+  private errorHandler<T>(operation: string, res?: any) {
     return (err: any): Observable<T> => {
       console.log(`${operation} failed: ${res}`);
-
       return of(res as T);
     };
   }

@@ -36,7 +36,9 @@ export class CustomersListComponent implements OnInit {
     this.resetEditStatus();
   }
 
-  deleteCustomer(): void {}
+  deleteCustomer(customer: CustomerInterface): void {
+    this.httpService.deleteData(customer);
+  }
 
   setValue(key: string, original: string, value: string): void {
     const valueTrim = value.trim();
