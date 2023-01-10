@@ -1,0 +1,38 @@
+<h2>Список покупателей</h2>
+
+<table class="table">
+
+  <ng-container *ngTemplateOutlet="head"></ng-container>
+
+  <tbody>
+  <tr *ngFor="let customer of customer$ | async; let i = index">
+    <th scope="row">{{i + 1}}</th>
+
+    <ng-container *ngTemplateOutlet="body; context: {$implicit: customer}"></ng-container>
+
+  </tr>
+  </tbody>
+</table>
+
+<ng-template #head>
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Имя</th>
+    <th scope="col">Email</th>
+    <th scope="col">Телефон</th>
+    <th scope="col">Город</th>
+    <th scope="col"></th>
+  </tr>
+  </thead>
+</ng-template>
+
+<ng-template #body let-customer>
+  <td>{{customer.name}}</td>
+  <td>{{customer.email}}</td>
+  <td>{{customer.mobile}}</td>
+  <td>{{customer.location}}</td>
+  <td>
+    <button class="btn btn-sm btn-info"><i class="fa"></i></button>
+  </td>
+</ng-template>
