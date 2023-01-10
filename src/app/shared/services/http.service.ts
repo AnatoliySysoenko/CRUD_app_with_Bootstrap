@@ -37,7 +37,12 @@ export class HttpService {
     );
   }
 
-  updateData(): void {}
+  updateData(customer: CustomerInterface, i: number): void {
+    const {key, ...data} = customer;
+    this.http.put(`${url}/customers/${key}.json`, data, httpOptions).subscribe({
+      next: (res) => this.customers[i] = customer
+    });
+  }
 
   deleteData(): void {}
 
